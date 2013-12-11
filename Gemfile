@@ -25,7 +25,7 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'devise', '3.0.0rc' # Authentication solution
 
-gem 'bcrypt-ruby', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
+# gem 'bcrypt-ruby', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

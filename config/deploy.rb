@@ -44,6 +44,11 @@ namespace :deploy do
     run "#{ sudo } ln -s #{ deploy_to }/shared/config/database.yml #{ current_path }/config/database.yml"
   end
 
+  # desc "Symlinks the database.yml"
+  # task :symlink_db, :roles => :app do
+  #   run "ln -nfs #{deploy_to}/shared/config/database.yml #{release_path}/config/database.yml"
+  # end
+
   # NOTE: I don't use this anymore, but this is how I used to do it.
   desc "Precompile assets after deploy"
   task :precompile_assets do
@@ -70,13 +75,14 @@ end
 namespace :bundle do
   desc "run bundle install and ensure all gem requirements are met"
   task :install do
-    run "cd #{current_path} && bundle install --without=test --no-update-sources"
+    run "cd #{current_path} && bundle install" 
   end
 end
 
 before "deploy:restart", "bundle:install"
 after  "deploy", "deploy:symlink_config_files"
 after  "deploy", "deploy:symlink_directories"
+after  "deploy", "deploy:precompile_assets"
 after  "deploy", "deploy:restart"
 after  "deploy", "deploy:cleanup"
 
