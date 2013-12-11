@@ -1,0 +1,104 @@
+<%= render :partial => 'chart' %>
+<div class="root">
+  <div class="row">
+      <div class="col-lg-12">
+          <div class="grey-box">
+          <div class="page-header">
+            <h4 class="page-header-text">Dog Expenses</h4>
+            <%#= link_to '<i class="icon-plus"></i> Add New'.html_safe, new_dog_expense_path, class: 'btn btn-large' %>
+            <%= add_new_btn(new_dog_expense_path) %>
+          </div>
+          
+          <div>
+            <%#= high_chart("expenses", @chart) %>
+          </div>
+          
+          <div id="mychart"></div>
+
+          <% if @dog_expenses.any? %>
+            <div>
+              <span class="badge"><%= @dog_expenses.size %></span> expenses
+              <span style="float:right">
+                Download:
+                <%= link_to('<i class="icon-file"></i>CSV'.html_safe, dog_expenses_path(format:"csv")) %> |
+                <%= link_to('<i class="icon-file"></i>Excel'.html_safe, dog_expenses_path(format:"xls"))%>
+              </span>
+            </div>
+
+          <% end %>
+          
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Dog</th>
+                <th>Charge for</th>
+                <th>Charge date</th>
+                <th>Amount in $USD</th>
+                <th>Amount in $NTD</th>
+                <th>Note</th>
+                <th>Show Entry</th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @dog_expenses.each do |dog_expense| %>
+                <tr>
+                  <td><%= dog_expense.dog.call_name %></td>
+                  <td><%= dog_expense.charge.name %></td>
+                  <td><%= dog_expense.charge_date %></td>
+                  <td>
+                    <%= currency_to(dog_expense.amount, dog_expense.currency) if dog_expense.currency == 'USD'%>
+                    <%#= number_to_currency(dog_expense.amount, dog_expense.currency =='TW'? {:locale=>'zh-TW'} : {}) %>
+                  </td>
+                  <td><%= currency_to(dog_expense.amount, dog_expense.currency) if dog_expense.currency == 'TW'%></td>
+                  
+                  <td><pre><%= dog_expense.note %></pre></td>
+                  <td><% if !dog_expense.show_entry.nil? %><%= dog_expense.show_entry.show_date %><% end %></td>
+                  <td>
+                    <div class="btn-group">
+                      <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="icon-edit icon-white"></i>Actions
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li><%= link_to '<i class="icon-eye-open"></i> Show'.html_safe, dog_expense%></li>
+                        <li><%= link_to '<i class="icon-edit"></i> Edit'.html_safe, edit_dog_expense_path(dog_expense) %></li>
+                        <li class="divider"></li>
+                        <li><%= link_to '<i class="icon-trash"></i> Delete'.html_safe, dog_expense, method: :delete, data: {confirm: 'Are you sure?'} %></li>
+                      </ul>
+                    </div>
+                  </td>
+                  <!-- 
+                  <td><%= link_to 'Show', dog_expense, class: 'btn btn-primary btn-small' %></td>
+                  <td><%= link_to 'Edit', edit_dog_expense_path(dog_expense), class: 'btn btn-primary btn-small' %></td>
+                  <td><%= link_to 'Destroy', dog_expense, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-small' %></td>
+                   -->
+                </tr>
+              <% end %>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><%#= number_to_currency(@dog_expenses.map(&:amount).sum) %>
+                  <%= currency_to(DogExpense.us_dollars.sum("amount").to_f,'USD') %>
+                </td>
+                <td><%= currency_to(DogExpense.tw_dollars.sum("amount").to_i,'TW') %></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <br>
+
+          <%= link_to 'New Dog expense', new_dog_expense_path %>
+        </div>      
+      </div>
+  </div>
+</div>

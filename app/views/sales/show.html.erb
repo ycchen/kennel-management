@@ -1,0 +1,70 @@
+<div class="root">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="grey-box">
+      <p id="notice"><%= notice %></p>
+        <h4>Sale Details</h4>
+
+      <% @sale.dog.pictures.each do |pic| %>
+        <%= image_tag(pic.file.url, heigh: 200, width: 200) %>
+      <% end %>
+      
+      <p>
+        <strong>Dog:</strong>
+        <%= @sale.dog.name %>
+      </p>
+
+      <p>
+        <strong>Service:</strong>
+        <%= @sale.service.name %>
+      </p>
+      
+      <p>
+        <strong>Customer:</strong>
+        <%= @sale.customer.name %>
+      </p>
+
+      <p>
+        <strong>Sale date:</strong>
+        <%= @sale.sale_date %>
+      </p>
+
+      <p>
+        <strong>Sale price:</strong>
+        <%= currency_to(@sale.sale_price, @sale.currency) %>
+      </p>
+
+      <p>
+        <strong>Note:</strong>
+        <%= @sale.note %>
+      </p>
+
+      <p>
+        <strong>Payment(s):</strong>
+        <table class="table table-strped">
+        <% @sale.payments.order("payment_date").each do |pay| %>
+          <tr>
+            <td><%= pay.payment_date %></td>
+            <td><%= pay.payment_type.name %></td>
+            <td><%= currency_to(pay.amount, pay.currency) %></td>
+            <td><%= pay.payment_status.name %></td>
+            <td><%= pay.note %></td>
+            <td><%= link_to "Edit", edit_sale_payment_path(@sale,pay) %> | Destroy</td>
+          </tr>
+        <% end %>
+        </table>
+      </p>
+
+      <a href="javascript:void(0)" onclick="javascript:$('.panel').slideToggle('slow')" class="btn btn-primary">Add Payment</a>
+
+      <div class="panel">
+        <h4>Add Payment</h4>
+        <%= render 'payments/paymentForm' %>
+      </div>
+
+      <%= link_to 'Edit', edit_sale_path(@sale), class: 'btn btn-primary' %>
+      <%= link_to 'Back', sales_path,class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div>
+</div>

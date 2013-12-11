@@ -1,0 +1,147 @@
+<div class="root">
+  <div class="row">
+      <div class="col-lg-12">
+          <div class="grey-box">
+            <div class="page-header">
+            <h4 class="page-header-text">Dogs</h4>
+            <%= add_new_btn(new_dog_path) %>
+            </div>
+
+              <div class="tabbable">
+                <ul class="nav nav-pills">
+                  <li class="active">
+                    <a href="#pane1" data-toggle="tab">
+                    <span class="badge"><%= @dogs.size %></span>&nbsp;All dogs</a>
+                  </li>
+                  <li>
+                    <a href="#pane2" data-toggle="tab">
+                    <span class="badge"><%= Dog.dogs.size %></span>&nbsp;Male</a>
+                  </li>
+                  <li>
+                    <a href="#pane3" data-toggle="tab">
+                    <span class="badge"><%= Dog.bitches.size %></span>&nbsp;Female</a
+                  </li>
+                  <li>
+                    <a href="#pane4" data-toggle="tab">
+                    <span class="badge"><%= Dog.sold.size %></span>&nbsp;Sold</a
+                  </li>
+                  
+                </ul>
+                
+                <div class="tab-content">
+                  <div id="pane1" class="tab-pane active">
+                    <% if @dogs.any? %>
+                    <div>
+                      <span class="badge"><%= @dogs.size %></span> <%= 'dog'.pluralize(@dogs.size) %> in the database 
+                      <span class="badge"><%= Dog.dogs.size %></span> Males
+                      <span class="badge"><%= Dog.bitches.size %></span> Bitches
+                      <span style="float:right">
+                        Download:
+                        <%= link_to('<i class="icon-file"></i>CSV'.html_safe, dogs_path(format:"csv")) %> |
+                        <%= link_to('<i class="icon-file"></i>Excel'.html_safe, dogs_path(format:"xls"))%>
+                      </span>
+                    </div>
+                  <% end %>
+
+                  <table class="table table-condensed table-striped">
+                    <thead>
+                      <tr>
+                        <th>Call name</th>
+                        <th>Birthday</th>
+                        <th>Gender</th>
+                        <th>Color</th>
+                        <th>Reg. no</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <% @dogs.each do |dog| %>
+                        <%= render :partial => 'data', locals: {dog: dog} %>
+                      <% end %>
+                    </tbody>
+                  </table>
+                  
+                  <%= link_to 'New Dog', new_dog_path %>
+                 </div>
+                 
+                  <div id="pane2" class="tab-pane">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Call name</th>
+                          <th>Birthday</th>
+                          <th>Gender</th>
+                          <th>Color</th>
+                          <th>Reg. no</th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% Dog.dogs.each do |dog| %>
+                          <%= render :partial => 'data', locals: {dog: dog} %>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div id="pane3" class="tab-pane">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Call name</th>
+                          <th>Birthday</th>
+                          <th>Gender</th>
+                          <th>Color</th>
+                          <th>Reg. no</th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% Dog.bitches.each do |dog| %>
+                          <%= render :partial => 'data', locals: {dog: dog} %>
+                        <% end %>
+                      </tbody>
+                    </table>                  
+                  </div>
+                  <div id="pane4" class="tab-pane">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Call name</th>
+                          <th>Birthday</th>
+                          <th>Gender</th>
+                          <th>Color</th>
+                          <th>Customer</th>
+                          <th>Sold Price</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% Dog.sold.each do |dog| %>
+                          <%= render :partial => 'sold', locals: {dog: dog} %>
+                        <% end %>
+                      </tbody>
+                    </table>                  
+                  </div> 
+
+                </div><!-- ./tab-content -->
+              </div><!-- ./tabbable -->
+            
+            </div>
+
+
+        </div>      
+      </div>
+  </div>
+</div>

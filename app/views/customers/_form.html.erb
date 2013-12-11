@@ -1,0 +1,92 @@
+<%= nested_form_for(@customer, :html => {:multipart => true, :class => 'form-horizontal', :role=> 'form'}) do |f| %>
+  
+  <% if @customer.errors.any? %>
+    <div id="error_explanation">
+      <h4><%= pluralize(@customer.errors.count, "error") %> prohibited this customer from being saved:</h4>
+
+      <ul>
+      <% @customer.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :name %>
+      <%= f.text_field :name, class: 'form-control' %>  
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name, class: 'form-control' %>
+    </div>
+  </div>
+    
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name, class: 'form-control' %>
+    </div>
+  </div>  
+  
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :email %>
+      <%= f.text_field :email, class: 'form-control' %>
+    </div>
+  </div>      
+  
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :phone %>
+      <%= f.text_field :phone, class: 'form-control' %>
+    </div>
+  </div>
+    
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :mobile %>
+      <%= f.text_field :mobile, class: 'form-control' %>
+    </div>
+  </div>  
+    
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :address %>
+      <%= f.text_field :address, class: 'form-control' %>
+    </div>
+  </div>   
+  
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :city %>
+      <%= f.text_field :city, class: 'form-control' %>
+    </div>
+  </div>     
+  
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :zipcode %>
+      <%= f.text_field :zipcode, class: 'form-control' %>
+    </div>
+  </div>   
+    
+  <div class="row">
+    <%= f.fields_for :pictures do |p| %>
+      <div class="col-md-3">
+        <%= image_tag(p.object.file.url, class: 'small-image') if p.object.file? %><br/>
+        <%= p.label :file %>
+        <%= p.file_field :file %>
+        <%= p.link_to_remove t('.remove_image') %>
+      </div>
+    <% end %>
+  </div>
+
+  <p><%= f.link_to_add t('.add_image'), :pictures %></p>
+  <p><%= f.submit class: 'btn btn-primary' %></p>
+  
+<% end %>

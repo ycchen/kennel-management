@@ -1,0 +1,39 @@
+<div class="root">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="grey-box">  
+        <div class="page-header">
+          <h4 class="page-header-text">Colors</h4>
+          <%= add_new_btn(new_color_path) %>
+        </div>
+
+        <table class="table table-condensed table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @colors.each do |color| %>
+              <tr>
+                <td><%= color.name %></td>
+                <td>
+                  <%= link_to 'Show', color, class: 'btn btn-primary'%>
+                  <%= link_to 'Edit', edit_color_path(color), class: 'btn btn-primary' %>
+                  <%= link_to 'Destroy', color, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <br>
+
+        <%= link_to 'New Color', new_color_path %>
+      </div>
+    </div>
+  </div>
+</div>

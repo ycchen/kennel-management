@@ -1,0 +1,41 @@
+<div class="root">
+  <div class="row">
+      <div class="col-lg-12">
+          <div class="grey-box">
+            <div class="page-header">
+              <h4 class="page-header-text">Charges</h4>
+              <%= add_new_btn(new_charge_path) %>
+            </div>
+            
+            <table class="table table-condensed table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @charges.each do |charge| %>
+                  <tr>
+                    <td><%= charge.name %></td>
+                    <td><%= charge.description %></td>
+                    <td>
+                        <%= link_to 'Show', charge, class: 'btn btn-primary btn-small' %>
+                        <%= link_to 'Edit', edit_charge_path(charge), class: 'btn btn-primary btn-small' %>
+                        <%= link_to 'Destroy', charge, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-small' %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+
+            <br>
+
+            <%= link_to 'New Charge', new_charge_path %>
+        </div>      
+      </div>
+  </div>
+</div>

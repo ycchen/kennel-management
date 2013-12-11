@@ -1,0 +1,105 @@
+<%= render :partial => 'chart' %>
+
+<div class="root">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="grey-box">
+        
+        <div class="page-header">
+          <h4 class="page-header-text">Pregnancies</h4>
+          <%= add_new_btn(new_pregnancy_path) %>
+        </div>
+        
+        <div>
+            <%#= high_chart("pregnancy", @chart) %>
+            <%#= high_chart("chart1", @chart1) %>
+            <%#= high_chart("chart2", @chart2) %>
+            <%#= high_chart("chart3", @chart3) %>
+            <%#= high_chart("chart4", @chart4) %>
+            <div id="mychart"></div>
+        </div>
+<%#= @pregnancies.already_due.order('due_date').map{|x| x.litters.where(survival: true).size} %>
+<%#= @pregnancies.already_due.order('due_date').map{|x| x.litters.where(survival: false).size} %>
+
+        <div class="tabbable">
+          <ul class="nav nav-pills">
+            <li class="active">
+              <a href="#pane1" data-toggle="tab">
+              <span class="badge"><%= @pregnancies.size %></span>&nbsp;All Pregnancies</a>
+            </li>
+            <li>
+                <a href="#pane2" data-toggle="tab">
+                <span class="badge"><%= Pregnancy.expected.size %></span>&nbsp; Expected soon</a>
+            </li>
+            <li>
+                <a href="#pane3" data-toggle="tab">
+                <span class="badge"><%= Pregnancy.already_due.size %></span>&nbsp;Already Due</a>
+            </li> 
+          </ul>
+          
+          <div class="tab-content">
+            <div id="pane1" class="tab-pane active">
+              <% if @pregnancies.any? %>
+                <div><span class="badge"><%= @pregnancies.size %></span> <%= 'pregnancy'.pluralize(@pregnancies.size) %> so far in year of <%= Date.today.year.to_s %>
+                <span class="badge"><%= Pregnancy.expected.size %></span> expected soon
+                <span style="float:right">
+                  Download:
+                  <%= link_to('<i class="icon-file"></i>CSV'.html_safe, pregnancies_path(format:"csv")) %> |
+                  <%= link_to('<i class="icon-file"></i>Excel'.html_safe, pregnancies_path(format:"xls"))%>
+                </span>
+              </div>
+              <% end %>
+
+              <table class="table table-condensed table-striped">
+                <thead>
+                  <%= render :partial => 'theader' %>
+                </thead>
+                <tbody>
+                  <% @pregnancies.each do |pregnancy| %>
+                    <%= render :partial => 'data', locals: {pregnancy: pregnancy} %>
+                  <% end %>
+                  <tr><td colspan="7">&nbsp;</td><td><%= Litter.count%></td></tr>
+                </tbody>
+              </table>
+
+              <br>
+              <%= link_to 'New Pregnancy', new_pregnancy_path %>
+            </div>
+
+            <div id="pane2" class="tab-pane">
+              <table class="table table-striped">
+                <thead>
+                  <%= render :partial => 'theader' %>
+                </thead>
+                <tbody>
+                  <% Pregnancy.expected.each do |pregnancy| %>
+                    <%= render :partial => 'data', locals: {pregnancy: pregnancy} %>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            
+            <div id="pane3" class="tab-pane">
+              <table class="table table-striped">
+                <thead>
+                  <%= render :partial => 'theader' %>
+                </thead>
+                <tbody>
+                  <% Pregnancy.already_due.each do |pregnancy| %>
+                    <%= render :partial => 'data', locals: {pregnancy: pregnancy} %>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            </div>
+
+          </div><!-- ./tab-content -->
+        </div><!-- ./tabbable -->
+
+
+
+        
+      </div>
+    </div>
+  </div>
+</div>

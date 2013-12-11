@@ -1,0 +1,176 @@
+
+<script type="text/javascript" charset="utf-8">
+
+// $(function () {
+    
+//         // Create the chart
+//         $('#puppy-three-layers').highcharts({
+//             chart: {
+//                 type: 'pie'
+//             },
+//             title: {
+//                 text: 'Puppies by litter, gender, and survival'
+//             },
+//             credits: {enabled: false},
+//             yAxis: {
+//                 title: {
+//                     text: 'Total percent market share'
+//                 }
+//             },
+//             plotOptions: {
+//                 pie: {
+//                     shadow: false,
+//                     center: ['50%', '50%']
+//                 }
+//             },
+//             tooltip: {
+//                 valueSuffix: '%'
+//             },
+//             series: [{
+//                 name: 'Pregnancy',
+//                 data: [11,23,14,15],
+//                 size: '40%',
+//                 dataLabels: {
+//                     formatter: function() {
+//                         return this.y > 5 ? this.point.name : null;
+//                     },
+//                     color: 'white',
+//                     distance: -30
+//                 }
+//             }, {
+//                 name: 'Gender',
+//                 data: [4,7,11,11,2,3,3,8,5,5,5],
+//                 size: '70%',
+//                 innerSize: '40%',
+//                 dataLabels: {
+//                     formatter: function() {
+//                         // display only if larger than 1
+//                         return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+//                     }
+//                 }
+//             }, {
+//                 name: 'Surivival',
+//                 data: [2,2,3,4,6,5,6,5,1,1,2,1,2,1,4,4,2,3,2,3,2,3],
+//                 size: '80%',
+//                 innerSize: '70%',
+//                 dataLabels: {
+//                     formatter: function() {
+//                         // display only if larger than 1
+//                         return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+//                     }
+//                 }
+//             }]
+//         });
+//     });
+    
+$(function () {
+    
+        var colors = Highcharts.getOptions().colors,
+            categories = <%= @litter_bitches %>,
+            name = 'Litter',
+            data = [
+
+                <% i=0
+                #@pregnancy.limit(15)
+                @pregnancy.each do |l| %>
+                {
+                    y: <%= l.litters.size %>,
+                    color: colors[<%= i %>],
+                    drilldown:{
+                        name: '<%= l.name %>',
+                        categories: ['Male', 'Female'],
+                        color: colors[<%= i %>],
+                        data: [<%= l.litters.where(gender: 'Male').size.to_s.html_safe %>,<%= l.litters.where(gender: 'Female').size.to_s.html_safe %>]
+                    }
+                },
+            <% 
+            i= i+1
+            end %>
+            ];
+
+        // Build the data arrays
+        var pregnancyData = [];
+        var litterData = [];
+        for (var i = 0; i < data.length; i++) {
+    
+            // add pregnancy data
+            pregnancyData.push({
+                name: categories[i],
+                y: data[i].y,
+                //color: data[i].color
+
+            });
+    
+            // add litter data
+            for (var j = 0; j < data[i].drilldown.data.length; j++) {
+                var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5 ;
+                litterData.push({
+                    name: data[i].drilldown.categories[j],
+                    y: data[i].drilldown.data[j],
+                    // color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                });
+            }
+
+        }
+    
+        // Create the chart
+        $('#puppy-three-layers').highcharts({
+            chart: {
+                type: 'pie'
+            },
+            credits: {enabled: false},
+            title: {
+                text: 'Litter puppies by gender'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total percent market share'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    shadow: false,
+                    center: ['50%', '50%']
+                }
+            },
+            tooltip: {
+                // valueSuffix: '%'
+            },
+            series: [{
+                name: 'Litter',
+                data: pregnancyData,
+                size: '40%',
+                dataLabels: {
+                    formatter: function() {
+                        return this.y > 2 ? this.point.name : null;
+                    },
+                    color: 'white',
+                    distance: -30
+                }
+            }, {
+                name: 'Puppy',
+                data: litterData,
+                size: '60%',
+                innerSize: '40%',
+                dataLabels: {
+                    formatter: function() {
+                        return this.y > 0 ? this.point.name +':'+ this.y : null;
+                    }
+                }
+
+            }, {
+                name: 'Puppy2',
+                data: [2,2,3,4,6,5,6,5,1,1,2,1,2,1,4,4,2,3,2,3,2,3],
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function() {
+                        return this.y > 0 ? this.point.name +':'+ this.y : null;
+                    }
+                }
+
+            }]
+        });
+    });
+</script>
+<div id="puppy-three-layers"></div><hr>

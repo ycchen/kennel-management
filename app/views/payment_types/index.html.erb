@@ -1,0 +1,40 @@
+<div class="root">
+  <div class="row">
+      <div class="col-lg-12">
+          <div class="grey-box">
+            <div class="page-header">
+              <h4 class="page-header-text">Payment types</h4>
+              <%= add_new_btn(new_payment_type_path) %>
+            </div>
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @payment_types.each do |payment_type| %>
+                <tr>
+                  <td><%= payment_type.name %></td>
+                  <td><%= payment_type.description %></td>
+                  <td>
+                      <%= link_to 'Show', payment_type, class: 'btn btn-primary btn-small' %>
+                      <%= link_to 'Edit', edit_payment_type_path(payment_type), class: 'btn btn-primary btn-small' %>
+                      <%= link_to 'Destroy', payment_type, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-small' %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+          <br>
+
+          <%= link_to 'New Payment type', new_payment_type_path %>
+        </div>      
+      </div>
+  </div>
+</div>

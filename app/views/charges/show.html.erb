@@ -1,0 +1,22 @@
+<div class="root">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="grey-box">
+		<p id="notice"><%= notice %></p>
+
+		<p>
+		  <strong>Name:</strong>
+		  <%= @charge.name %>
+		</p>
+
+		<p>
+		  <strong>Description:</strong>
+		  <%= @charge.description %>
+		</p>
+
+		<%= link_to 'Edit', edit_charge_path(@charge) , class: 'btn btn-primary' %> |
+		<%= link_to 'Back', charges_path,class: 'btn btn-primary'  %>
+      </div>
+    </div>
+  </div>
+</div>

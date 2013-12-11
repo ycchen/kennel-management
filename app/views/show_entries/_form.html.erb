@@ -1,0 +1,100 @@
+<%= nested_form_for(@show_entry, :html => {:multipart => true, :class=> 'form-horizontal', :role => 'form'}) do |f| %>
+  <% if @show_entry.errors.any? %>
+    <div id="error_explanation">
+      <h4><%= pluralize(@show_entry.errors.count, "error") %> prohibited this show_entry from being saved:</h4>
+
+      <ul>
+      <% @show_entry.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :dog %>
+      <%= f.select(:dog_id, Dog.all.map{|c| [c.name, c.id]}, {include_blank: "Select a Dog"},{class: 'form-control'}) %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :show %>
+      <%= f.select(:show_id, Show.all.map{|s| [(s.name + "-" + s.kennel_club), s.id]}, {include_blank: 'Select a new Show'}, {class: 'form-control'}) %>
+    </div>
+  </div>
+    
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :show_date %>
+      <div class="input-append date" id="dp3" data-date-format="yyyy-mm-dd">
+        <%= f.text_field :show_date, value: date_value(@show_entry.show_date), :readonly => true, class: 'form-control' %><span class="add-on"><i class="icon-th"></i></span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :entry_fee %>
+      <%= f.text_field :entry_fee, class: 'form-control' %>  
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :handling_fee %>
+      <%= f.text_field :handling_fee, class: 'form-control' %>
+    </div>
+  </div>
+    
+  <div class="form-group">
+    <div class="col-xs-4">
+    <%= f.label :points %>
+    <%= f.number_field :points, class: 'form-control' %>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-xs-4">
+    <%= f.label :expense %>
+    <%= f.text_field :expense, class: 'form-control' %>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-xs-4">
+    <%= f.label :title %>
+    <%= f.text_field :title, class: 'form-control' %>
+    </div>
+  </div>
+    
+  <div class="form-group">
+    <div class="col-xs-4">
+    <%= f.label :reg_class %>
+    <%= f.text_field :reg_class , class: 'form-control'%>
+    </div>
+  </div>
+    
+  <div class="form-group">
+    <div class="col-xs-4">
+    <%= f.label :judge %>
+    <%= f.text_field :judge, class: 'form-control' %>
+    </div>
+  </div>
+  
+   <div class="row">
+    <%= f.fields_for :pictures do |p| %>
+      <div class="col-md-3">
+        <%= image_tag(p.object.file.url, :class => 'small-image')%><br/>
+        <%= p.label :file %>
+        <%= p.file_field :file %>
+        <%= p.link_to_remove t('.remove_image') %>
+      </div>
+    <% end %>
+  </div> 
+  
+  <p><%= f.link_to_add t('.add_image'), :pictures %></p>
+
+  <p><%= f.submit class: "btn btn-primary" %></p>
+<% end %>

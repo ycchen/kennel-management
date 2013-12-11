@@ -1,0 +1,32 @@
+<div class="root">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="grey-box">
+		<p id="notice"><%= notice %></p>
+
+		<p>
+		  <strong>Pregnancy:</strong>
+		  <%= @litter.pregnancy.dog.name %>
+		</p>
+
+		<p>
+		  <strong>Gender:</strong>
+		  <%= @litter.gender %>
+		</p>
+
+		<p>
+		  <strong>Color:</strong>
+		  <%= @litter.color.name %>
+		</p>
+
+		<p>
+		  <strong>Survival:</strong>
+		  <%= yesno(@litter.survival) %>
+		</p>
+
+		<%= link_to 'Edit', edit_litter_path(@litter) ,class: 'btn btn-primary' %> |
+		<%= link_to 'Back', litters_path,class: 'btn btn-primary'  %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="root">
+  <div class="row">
+      <div class="col-lg-12">
+          <div class="grey-box">
+            <div class="page-header">
+              <h4 class="page-header-text">Matings</h4>
+              <%= add_new_btn(new_pregnancy_path) %>
+            </div>
+            <table class="table table-condensed table-striped">
+              <thead>
+                <tr>
+                  <th>Pregnancy</th>
+                  <th>Heat start date</th>
+                  <th>Mating date</th>
+                  <th>Sire</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @matings.each do |mating| %>
+                  <tr>
+                    <td><%= mating.pregnancy.name %></td>
+                    <td><%= mating.pregnancy.heat_start_date %></td>
+                    <td><%= mating.mating_date %></td>
+                    <td><%= mating.sire.call_name %></td>
+                    <td>
+                      <%= link_to 'Show', mating, class: 'btn btn-primary btn-small' %>
+                      <%= link_to 'Edit', edit_mating_path(mating), class: 'btn btn-primary btn-small' %>
+                      <%= link_to 'Destroy', mating, method: :delete, data: { confirm: 'Are you sure?' },class: 'btn btn-primary btn-small' %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+
+            <br>
+
+            <%= link_to 'New Mating', new_mating_path %>
+        </div>
+      </div>
+  </div>
+</div>

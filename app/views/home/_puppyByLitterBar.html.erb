@@ -1,0 +1,52 @@
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  // new Highcharts.Chart({
+  $("#puppies-by-litter-bar").highcharts({
+    chart: {
+            // renderTo: 'mychart', 
+            type: 'column'
+           },
+    title: {text: 'Puppies survival per litter'},
+    xAxis: {
+      categories: <%= @litter_bitches %>,
+      labels: {
+        rotation: -90,
+        align: 'right'
+      }
+    },
+    yAxis: {title: {text: "Puppies", margin: 20},
+            stackLabels:{enabled: true, color: 'gray'}
+    },
+    // credits: {enabled: true, href: 'http://hungkwang.com', text: 'hungkwang.com'},
+    credits: {enabled: false},
+    plotOptions: {
+              column:{
+                stacking: 'normal',
+                dataLabels:{ 
+                  enbaled: true
+                }
+              }
+    },
+    legend: {
+           align: 'center', 
+           labelFormatter: function(){
+              var total = 0;
+              for(var i=this.yData.length; i--;) {total += this.yData[i];};
+              return this.name + '-Total: ' + total;
+           }
+    },
+    series: [
+              {name: 'Puppies survive', data: <%= @pregnancy.map{|x| x.litters.where(survival: true).size} %>},
+              {name: 'Puppies not survive', data: <%= @pregnancy.map{|x| x.litters.where(survival: false).size} %>}
+              // {type: 'pie',name: 'Puppies',
+              //  center: [150,80],
+              //  size: 150,
+              //  showInLegend: false,
+              //  data: <%= @puppy_count %>
+              // }
+            ]
+
+  });
+});
+</script>
+<div id="puppies-by-litter-bar"></div><hr>

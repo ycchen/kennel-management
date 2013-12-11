@@ -1,0 +1,25 @@
+<%= form_for(@color, :html => {:class=>'form-horizontal', :role => 'form'}) do |f| %>
+  <% if @color.errors.any? %>
+    <div id="error_explanation">
+      <h4><%= pluralize(@color.errors.count, "error") %> prohibited this color from being saved:</h4>
+
+      <ul>
+      <% @color.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <div class="col-xs-4">
+      <%= f.label :name %>
+      <%= f.text_field :name, class: 'form-control' %>      
+    </div>
+  </div>
+
+
+  <br/>
+  <p><%= f.submit class: 'btn btn-primary' %></p>
+  
+<% end %>

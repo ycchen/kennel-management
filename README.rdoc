@@ -1,0 +1,832 @@
+== README
+
+This README would normally document whatever steps are necessary to get the
+application up and running.
+
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
+
+
+Please feel free to use a different markup language if you do not plan to run
+<tt>rake doc:app</tt>.
+# generate dog table
+$ rails g scaffold dog name:string call_name:string birthday:date sex:string registration_no:string 
+
+# generate show table
+$ rails g scaffold show name:string kennel_club:string start_date:date end_date:date location:string
+
+# migrate script
+$ rake db:migrate
+
+# generate show_entry table
+$ rails g scaffold show_entry dog:references show:references entry_fee:decimal handling_fee:decimal points:integer title:string show_date:date
+
+$ rake db:migrate
+
+# add the relationship to dog, show and show_entry models
+
+--- dog model ---
+
+has_many :show_entries
+
+--- show model ---
+
+has_many :show_entries
+
+--- show_entry model ---
+
+belongs_to: dog
+belongs_to: show
+
+# update Gemfile
+
+group :development, :test do
+	# Use sqlite3 as the database for Active Record
+	gem 'sqlite3'
+	# Use Capistrano for deployment
+	gem 'capistrano'			# interation testing tools for rack based web application
+	gem 'factory_girl_rails' 	# fixtures replacement
+	gem 'faker'					# generate fake data
+end
+
+# added devise gem to Gemfile
+gem 'devise'
+
+== User Model
+
+1. install devise gem
+
+$ rails g devise:install
+
+2. create user model
+$ rails g devise User
+$ rake db:migrate
+
+== Remeber to change Gemfile.lock to rename sqlite3 (1.3.7-x86-mingw32) to sqlite3 (1.3.7-x64-mingw32) every time runs bundle install
+
+--- included gem 'bootstrap-sass-rails'  	# bootstrap framework
+gem 'bootstrap-sass-rails'  	# bootstrap framework
+
+--- updated views\layouts\application.html.erb with layout
+
+--- added shared folder in views\shared
+
+--- create _navigation.html.rb in views\shared folder
+
+--- added <%= render :partial => 'shared/navigation' %> to application.html.erb
+
+3. generate devise views files
+$ rails g devise:views devise
+
+4. update sign in and sign up layout view files
+-- views\devise\registrations\edit.html.erb
+-- views\devise\registrations\new.html.erb
+-- views\devise\sessions\new.html.erb
+
+== Generate migration script to update show_entry table
+$ rails g migration add_show_date_and_expense_to_show_entry show_date:date expense:decimal
+
+-- modified migration script
+add_column :show_entries, :expense, :decimal, :precision => 8, :scale => 2, default => 0.0
+
+-- added ruby array in dog.rb model
+SEX_TYPE = %w[Female Male]
+
+-- refere to SEX_TYPE array
+Dog::SEX_TYPE.first
+
+Dog::SEX_TYPE.last
+
+-- create a date using Date class
+http://ruby-doc.org/stdlib-2.0/libdoc/date/rdoc/Date.html
+
+Date.new(2013,2,19)  # Date: 2013-02-19
+Date.parse('2013-02-19') # Date: 2013-02-19
+
+== Generate migration script to add class to show_entry table
+$ rails g migration add_reg_class_and_judge_to_show_entry reg_class:string judge:string
+
+$ rake db:migrate
+
+-- make sure update controllers show_entry_params and add new fields 
+
+-- update dog, show controllers of dog_params and show_params functions
+
+== Generate charge table to description all charges
+$ rails g scaffold charge name:string description:text
+
+== Generate dog expense table to handle Vet's bill, boarding fee, and other related charge.
+
+$ rails g scaffold dog_expense dog:references charge:references charge_date:date amount:decimal note:text
+
+== Generate migration script to add show_entry_id to dog_expense table
+$ rails g migration add_show_entry_id_to_dog_expense show_entry:references
+
+-- Adding sum to view in particular column
+<%= @dog.dog_expenses.map(&:amount).sum %>
+<%= @dog.show_entries.map(&:points).sum %>
+
+== Generate customer model
+$ rails g scaffold customer name:string first_name:string last_name:string email:string phone:string mobile:string address:string city:string zipcode:string
+
+== Generate payment_type model
+$ rails g scaffold payment_type name:string description:text
+
+== Generate sale model
+$ rails g scaffold sale dog:references customer:references sale_date:date sale_price:decimal note:text
+
+== Generate payment_status model
+$ rails g scaffold payment_status name:string note:text
+
+
+== Generate payment model
+$ rails g scaffold payment sale:references payment_type:references payment_status:references payment_date:date amount:decimal note:text
+
+== Generate photo model
+$ rails g scaffold photo dog:references name:string data:binary filename:string mime_type:string
+# cannot make it work so it will remove it later
+$ rails destroy model photo  # this removed migrate script, models and test files
+$ rails destroy controller photos # this removed controller, helpers and assests photos related files
+
+== Install CarrierWave gem for upload file
+-- Add gem 'carrierwave' to Gemfile
+https://github.com/carrierwaveuploader/carrierwave/wiki
+
+https://github.com/jnicklas/carrierwave-example-app/blob/master/app/views/users/_form.html.erb
+
+1. generate uploader Avatar
+$ rails g uploader Avatar  # this will give you a file in app/uploaders/avatar_uploader.rb
+
+2. generate user model
+$ rails g scaffold user name:string email:string avatar:string
+
+3. update model/user.rb to add following code
+	mount_uploader :avatar, AvatarUploader # this is to point :avatar column to use AvatarUploader class
+
+4. modified views/user/_form.html.erb to add 
+<% form_for @user, :html => { :multipart => true } do |f| %>
+<p><%= f.label :name %><br /><%= f.text_field :name %></p>
+<p><%= f.label :email %><br /><%= f.text_field :email %></p>
+<p>
+  <%= f.label :avatar, "Upload local file:" %><br />
+  <%= f.file_field :avatar %>
+</p>
+<p><%= f.submit "Submit" %></p>
+<% end %>
+
+== Multiple files upolad with carrierwave and nested_form
+1. add nested_form to Gemfile
+gem 'nested_form'
+
+-- install nested_form
+$ rails g nested_form:install
+
+-- updated assets\javascripts\application.js to add nested_form js
+//= require jquery_nested_form
+
+-- generate picture model
+$ rails g model picture attachable:references file:string
+
+-- modified db\migrate\xxxx_create_pictures.rb
+modified line below to add :polymorphic => true
+t.references :attachable, index: true, :polymorphic => true
+
+$ rake db:migrate
+
+-- generate uploader from carrierwave gem
+$ rails generate uploader file
+
+-- update relationship between dog and picture models
+
+-- models\picture.rb
+belongs_to :dog, polymorphic: true
+mount_uploader :file, FileUploader
+
+-- models\dog.rb
+has_many :pictures, :as => :attachable, :dependent => :destroy
+accepts_nested_attributes_for :pictures, :allow_destroy => true
+
+-- update controllers\dog.rb dog_params method
+added :pictures_attributes => [:id, :file, '_destroy'] to the permit()
+
+/* Add image upload to show_entry model */
+
+-- Update relationship between ShowEntry and Picture models
+- models\show_entry.rb
+  has_many :pictures, :as => :attachable, :dependent => :destroy
+  accepts_nested_attributes_for :pictures, :allow_destroy => true
+
+- Updated controllers\show_entries_controller.rb
+Add :pictures_attributes => [:id, :file, '_destroy'] to the permit()
+
+- Updated views\show_entries\_form.html.erb with nested_form 
+
+- Update views\show_entries\show.html.erb to show upload file in image_tag
+
+-- Add payment form on Sale show page
+
+- update config\routes.rb group by sale and payment resources
+resources :sales do
+	resources :payments
+end
+
+By nested resources like that it will create routes below
+	           sales GET    /sales(.:format)                            sales#index
+	                 POST   /sales(.:format)                            sales#create
+	        new_sale GET    /sales/new(.:format)                        sales#new
+	       edit_sale GET    /sales/:id/edit(.:format)                   sales#edit
+	            sale GET    /sales/:id(.:format)                        sales#show
+	                 PATCH  /sales/:id(.:format)                        sales#update
+	                 PUT    /sales/:id(.:format)                        sales#update
+	                 DELETE /sales/:id(.:format)                        sales#destroy
+	   sale_payments GET    /sales/:sale_id/payments(.:format)          payments#index
+	                 POST   /sales/:sale_id/payments(.:format)          payments#create
+	new_sale_payment GET    /sales/:sale_id/payments/new(.:format)      payments#new
+   edit_sale_payment GET    /sales/:sale_id/payments/:id/edit(.:format) payments#edit
+	    sale_payment GET    /sales/:sale_id/payments/:id(.:format)      payments#show
+	                 PATCH  /sales/:sale_id/payments/:id(.:format)      payments#update
+	                 PUT    /sales/:sale_id/payments/:id(.:format)      payments#update
+	                 DELETE /sales/:sale_id/payments/:id(.:format)      payments#destroy
+
+-- Update navigation and remove payment_path
+
+-- Update views\sales\show.html.erb to add payment form as partial template
+<%= render :partial => 'payments/form' %> 
+
+-- update view\payments\_form.html.erb
+<%= form_for([@sale, @sale.payments.build]) do |f| %>
+
+-- update controllers\payments_controller.rb create method
+def create
+	@sale = Sale.find(params[:sale_id])
+	@payment = @sale.payments.create!(payment_params)
+
+	#make sure to direct back to sales show page after saved the new payment
+end
+
+-- added hid and show function to add payment on sales\show.html.erb page
+
+- added .flip and .panel css in application.css
+.flip{
+	margin: 0px;
+    padding: 5px;
+    text-align: center;
+    background: #ddd;
+    border: solid 1px #fff;
+}
+.panel{
+    display: none;
+}
+
+- updated javascripts\sale.js.coffe
+$ ->
+	$(".flip").click ->
+		$(".panel").slideToggle("slow")
+
+
+- updated views\sales\show.html.erb
+<p class="flip">Add Payment</p>
+<div class="panel">
+	<h3>Add Payment</h3>
+    <%= render 'payments/form' %>
+</div>
+
+--Update relationship between sale and payment to make sure the dependent option is set to destroy
+
+- models\sale.rb
+ has_many :payments, :dependent => :destroy
+
+- Added show dog photos on the sale\show.html.erb page
+
+== Generate migration script to add sire_id and dams_id to dog model
+$ rails g migration add_sire_id_and_dams_id_to_dog sire_id:integer dams_id:integer
+
+-- Updated views\dogs\ all file to add sire_id and dams_id to view files
+
+-- Updated models\dog.rb add relationship for Sire and Dams on the model
+belongs_to :sire, class_name: "Dog", foreign_key: "sire_id"
+belongs_to :dams, class_name: "Dog", foreign_key: "dams_id"
+
+-- Updated controllers\dogs_controller.rb add sire_id and dams_id attributes to permint() method
+
+def new
+	@dog = Dog.new
+	@bitches = Dog.where(sex: 'Female')
+	@dogs = Dog.where(sex: 'Male')
+end
+
+== Added image upload for customer model
+
+-- Updated models\customer.rb to add the relationship between customer and picture models
+
+has_many :pictures, :as => :attachable, :dependent => :destroy
+accepts_nested_attributes_for :pictures, :allow_destroy => true
+
+-- Updated controllers\customers_controller.rb
+added :pictures_attributes => [:id, :file, '_destroy'] to permit()
+
+-- Updated views\customers\_form.html.erb with nested_form
+	<%= nested_form_for(@customer, :html => {:multipart => true}) do |f| %>
+
+	<div class="field">
+	    <%= f.fields_for :pictures do |p| %>
+	      <%= image_tag(p.object.file.url, height: 200, width: 200) %>
+	      <%= p.label :file %>
+	      <%= p.file_field :file %>
+	      <%= p.link_to_remove t('.remove_image') %>
+	    <% end %>
+	    <%= f.link_to_add t('.add_image'), :pictures %>
+  	</div>
+
+-- Update views\customers\all file to display upload images
+
+
+== Added Bootstrap tab to customers\show.html.erb page to display customer related information, such as sales and basic contact information
+
+-- Added 3 tabs for Customer Basic Information, Purchase History, and Other
+
+== Added migration script to create color model
+$ rails g scaffold color name:string
+
+== Added migriation script to add color to dog model
+$ rails g migration add_color_id_to_dog color:references
+
+== Added pregnancy model
+$ rails g scaffold pregnancy dog:references heat_start_date:date due_date:date surgery_date:date total_puppy:integer
+
+== Added mating model
+$ rails g scaffold mating pregnancy:references mating_date:date sire_id
+
+- added relationship between Pregnancy and Mating model
+
+- models\pregnancy.rb
+has_many :matings
+
+- models\mating.rb
+belongs_to :pregnancy
+
+# this is relationship allow Mating model to reference :sire back to Dog model
+belongs_to :sire, class_name: "Dog", foreign_key: "sire_id"
+
+== Added litter model
+$ rails g scaffold litter pregnancy:references gender:string color:references survival:boolean
+
+== Generate migration script to add dog_id to litter model
+$ rails g migration add_dog_id_to_litter dog:references
+
+== Generate migration script to add progesterone to Mating model
+$ rails g migration add_progesterone_to_mating progesterone:decimal
+
+/*
+collection_radio_buttons(:item, :owner_id, Owner.all, :id, :name)
+m:m = > collection_check_boxes(:item, :owner_id, Owner.all, :id, :name)
+
+f.date_field :reurn_date
+
+*/
+
+http://stackoverflow.com/questions/4820549/how-to-empty-db-in-heroku
+
+== Heroku reset postgres db
+
+--To drop the database:
+$ heroku pg:reset SHARED_DATABASE --confirm NAME_OF_THE_APP
+$ heroku pg:reset DATABASE --confirm NAME_OF_THE_APP
+
+--To recreate the database:
+$ heroku run rake db:migrate
+
+--To seed the database:
+$ heroku run rake db:seed
+
+-- Final step
+$ heroku restart
+
+--To reset the database  -- it will ask you to confirm the name of database
+$ heroku pg:reset DATABASE
+
+$ heroku run rake db:migrate # recreate the tables sturcture
+
+$ heroku run rake db:seed # re-populate table data
+
+-- Added basic validation for all models
+validates :name, presence: true, numericality:true
+
+-- Generated migration script to drop sex column and add gender to dog
+$ rails g migration Remove_sex_from_dog sex:string
+
+$ rails g migration add_gender_to_dog gender:string
+
+/* Model.where is return a relation, if you want a specific object, you need to tell build on the return relation */
+http://api.rubyonrails.org/classes/ActiveRecord/Relation.html
+
+c = Color.where(name: 'Brindle') # this returns as relation not an object
+c.first.id # id = 5
+c.first.name # Brindle
+
+brindle = Color.where(name: 'Brindle').first # this returns as an object
+brindle.id # 5
+brindle.name # Brindle
+
+-- Added flashes_helper in helpers\application_helper.rb
+	def flashes_helper
+		results =[]
+		flashes = [:alert, :error, :info, :notice, :success]
+
+		flashes.each do |name, msg|
+			hidden = "hide" if flash[name].blank?
+			results << content_tag(:div, content_tag(:p, flash[name]), class: "alert alter-#{name} #{hidden} alert-block")
+		end	
+		results.join("").html_safe
+	end
+
+-- Updated layout\application.html.erb to add flashes div
+<div class="flashes">
+	<%= flashes_helper %>
+</div>
+
+-- Added gem 'rolify' to handle user roles
+gem 'rolify'
+
+-- Generated the Role class from rolify
+$ rails g rolify:role Role User
+
+# this will generated following files
+      create  app/models/role.rb
+      insert  app/models/user.rb
+      create  config/initializers/rolify.rb
+      create  db/migrate/20130823195945_rolify_create_roles.rb
+
+$ rake db:migrate
+
+-- added gem 'cancan' to Gemfile to handle authorization
+gem 'cancan'
+
+-- generated models\ability.rb file
+$ rails g cancan:ability
+
+
+-- generated home controller
+$ rails g controller home index
+
+-- updated routes.rb to set root => 'home#index'
+
+-- Added routing erro handler in an application
+
+-- config\routes.rb (AT THE BOTTOM OF PAGE)
+match '*path(.:format)', :to => 'application#rounting_error', via: :all
+
+-- controllers\application_controller.rb
+	def routing_error
+		render_not_found('The object you tried to access does not exist!')
+	end
+
+	protected
+
+	def render_not_found(msg='The object you tried to access does not exits!')
+		flash[:notice] = msg
+		redirect_to root_path
+	end
+
+
+  rescue_from ActiveRecord::RecordNotFound, :with => :not_found
+  
+  def not_found
+    show_error('Object is not found!')
+  end
+
+  def show_error(msg='Object does not exist!')
+    flash[:notice] = msg
+    redirect_to root_path
+  end
+
+-- Added migration script to add name to pregnancies table
+$  rails g migration add_name_to_pregnancy name:string
+
+-- Added migration script to add currency column to Expenses and Sales tables
+$ rails g migration add_currency_to_dog_expense currency:string
+$ rails g migration add_currency_to_sale currency:string
+$ rails g migration add_currency_to_payment currency:string
+$ rake db:migrate
+
+-- Updated expense,sale, and payment views to add currency field
+
+-- Added simple_form gem
+gem 'simple_form'
+
+-- Install simple_form # this will generated few files
+$ rails g simple_form:install
+      create  config/initializers/simple_form.rb
+      create  config/locales/simple_form.en.yml
+      create  lib/templates/erb/scaffold/_form.html.erb
+
+-- Added Users controller
+$ rails g controller Users index new create edit update destroy
+-- Updated routes.rb
+resources :users
+
+-- Added display_name to User model
+$ rails g migration add_display_name_to_user display_name:string
+$ rake db:migrate
+
+-- Updated models\user.rb to make display_name is required
+-- Updated views\users\ all file to added display_name column
+
+== Added CSV download on all model
+-- Added require 'csv' in config/application.rb
+
+== Added reports controller
+$ rails g controller reports
+
+
+-- view heroku logs
+$ heroku logs
+$ heroku logs -n 1500 #
+$ heroku logs -t 
+$ heroku logs --tail
+
+-- heroku database backup
+$ heroku pgbackups:capture
+
+-- Added note column to pregnancies table
+$ rails g migration add_note_to_pregnancy  note:text
+
+https://github.com/Nerian/bootstrap-datepicker-rails
+-- Added bootstrap-datepicker-rails gem
+-- modified application.css to add
+ *= require bootstrap-datepicker
+-- modified application.js to add
+//= require bootstrap-datepicker
+
+-- Added $('#dp3').datepicker() to application.js
+
+## Turbolinks causes other JS works normally
+-- Added gem 'jquery-turbolinks' in the Gemfile
+-- Added //= require jquery.turbolinks in application.js
+
+-- Added github repository location using git remote
+-- frist create an empty repository at github and get the URL
+$ git remote add origin https://github.com/ycchen/dms-contact-manager.git
+$ git remote -v
+heroku  git@heroku.com:dmsbcm.git (fetch)
+heroku  git@heroku.com:dmsbcm.git (push)
+origin  https://github.com/ycchen/dms-contact-manager.git (fetch)
+origin  https://github.com/ycchen/dms-contact-manager.git (push)
+
+-- push to github
+$ git push -u origin master
+
+-- provided username at github and password
+
+== Added rails-erd gem to generate Entity-Relationship Diagrams for Rails application
+-- https://github.com/voormedia/rails-erd
+
+== Added lazy_high_charts HighChart to Gemfile
+https://github.com/michelson/lazy_high_charts/wiki
+gem 'lazy_high_charts'
+
+$ bundle install
+
+-- Added javascript to application.js
+
+//= require highcharts/highcharts
+//= require highcharts/highcharts-more
+//= require highcharts/modules/exporting
+-- Create an object of LazyHighCharts in the controller
+LazyHighCharts::HighChart
+
+== Generate mailer
+$ rails g mailer UserMailer
+ create  app/mailers/user_mailer.rb
+ invoke  erb
+ create    app/views/user_mailer
+ invoke  test_unit
+ create    test/mailers/user_mailer_test.rb
+
+-- Added config\initializers\setup_mail.rb to use gmail as smtp server to send out email
+ActionMailer::Base.smtp_settings = {  
+      :address              => "smtp.gmail.com",  
+      :port                 => 587,  
+      :domain               => "gmail.com",  
+	  :user_name            => "your username",  
+      :password             => "your password",  
+      :authentication       => "plain",  
+      :enable_starttls_auto => true  
+   } 
+
+-- Added welcome_email method in /mailers/user_mailer.rb
+  def welcome_email(user)
+  	@user = user
+  	@url = 'http://localhost:3000/'
+  	mail(to: @user.email, subject: 'Welcome to My Awesome Site')
+  end
+
+-- Added views/user_mailer/welcome_email.html.erb and welcome_email.text.erb
+
+-- Updated controllers/users_controller.rb to add a triger to send out email inside of create method
+ UserMailer.welcome_email(@user).deliver
+
+-- Set environment variables for GMAIL_USER AND GMAIL_PWD (use cmd.exe not powershell.exe)
+$ set GMAIL_USER "USER"
+$ set GMAIL_PWD "PWD"
+
+-- Updated setup_mail.rb and replace 
+:user_name            => ENV['GMAIL_USER'],  
+:password             => ENV['GMAIL_PWD'],  
+
+
+-- Set up environment variables in Heroku
+https://devcenter.heroku.com/articles/config-vars
+
+$ heroku config:set GMAIL_USER=joesmith
+$ heroku config:set GMAIL_PWD=password
+
+$ heroku config
+GITHUB_USERNAME: joesmith
+OTHER_VAR:       production
+
+$ heroku config:get GITHUB_USERNAME
+joesmith
+
+$ heroku config:unset GITHUB_USERNAME
+Unsetting GITHUB_USERNAME and restarting myapp... done, v13
+
+== Added yesno helper /helper/application.rb
+def yesno(x)
+	x ? "Yes" : "No"
+end
+
+-- views\pregnancies\show.html.erb
+<%= yesno(myboolean) %>
+
+
+== Updated Pregnancies, Expenses highcharts
+-- Added 2 pie charts on dog_expense model
+
+-- Updated all chart with javascript
+
+== Converted Postgres Sql to sqlite3
+-- heroku database backup
+$ heroku pgbackups:capture
+$ heroku pgbackups:url # by default the URL will reference the most recent backup
+
+-- download most recent backup dump file
+
+-- restore heroku dump file to local Postgres sql database
+
+-- cd C:\Program Files\PostgreSQL\9.2\bin
+$ pg_dump -U postgres -W --data-only --inserts showdog > c:\sd.sql
+password: admin
+
+http://manuel.manuelles.nl/blog/2012/01/18/convert-postgresql-to-sqlite/
+
+1. Remove/modify the dump.
+2. Remove the lines starting with SET
+3. Remove the lines starting with SELECT pg_catalog.setval
+4. Replace true for ‘t’
+5. Replace false for ‘f’
+6. Add BEGIN; as first line and END; as last line
+
+7. Recreate an empty development database. bundle exec rake db:migrate
+8. Import the dump.
+$ cd to c:\sqlite2 with CMD
+sqlite3 c:\websites\breeder_mgt\db\development.sqlite3
+sqlite> delete from schema_migrations;
+sqlite> .read c:/dump.sql
+sqlite> .exit
+
+sqlite> .help # for help commands
+
+
+== Added better_errors gem
+group :development do
+	gem 'better_errors'
+end
+
+== Disabled logging of asset pipeline in development enviroment
+1. config.assets.debug = false  #in config/environments/development.rb
+2. config.assets.logger = false
+
+
+== Added distinct group count for litter gender
+# app/models/litter.rb
+
+def self.gender_count(pregnancy)
+	where(pregnancy_id: pregnancy).group("gender").size	
+end
+
+or # from views
+
+<% pregnancy.litters.group(:gender).size.each do |key, value| %>
+      <%= key %>: <%= value %>
+<% end %>
+
+-- Group by multiple comlumns
+
+pregnancy.litters.group(:gender, :survival).count
+
+
+== Highcharts with turbolink issue
+
+-- make sure all of links that has highchart on the page need to add data-no-turbolink='true' to a tag
+
+-- or using <%= link_to 'Dog', dogs_path(), data: {no_turbolink: true} %>
+
+-- otherwise you will get Uncaught highcharts error #13
+
+== Generate migration to add new column cleft_palate to litters table
+
+$ rails g migration add_cleft_palate_to_litter cleft_palate:boolean
+
+-- default to false
+
+-- updated controllers\litter_controller.rb to add cleft_palate in litter_params
+
+-- updated views\litters\files to add cleft_palate as radio button
+
+== Added sendgrid:starter to heroku
+
+$ heroku addons:add sendgrid:starter
+
+
+== Modified production environment to use Gmail to send out email config/environments/production.rb
+
+  config.action_mailer.default_url_options ={:host => 'showdogmgt.herokuapp.com'}
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.smtp_settings ={
+      address: "smtp.gmail.com",  
+      port: 587,  
+      domain: "showdogmgt.herokuapp.com",  
+      authentication: "plain",
+      enable_starttls_auto: true,  
+      user_name: ENV["GMAIL_USER"],  
+      password: ENV["GMAIL_PWD"]  
+  }
+
+== Added status table
+
+$ rails g scaffold status name:string sort:integer
+
+$ rake db:migrate
+  
+== Added status_id to Dogs table
+
+$ rails g migration add_status_id_to_dog status_id:integer
+
+-- Modified migration script to set status_id default to 1
+
+$ rake db:migrate
+
+-- updated controllers\dogs_controller.rb to add status_id to dog_params
+
+-- updated views\dogs\ all files to added status_id
+
+== Install and gem without doc
+
+$ gem install rails --no-rdoc --no-ri
+
+or automate this with the following in your.gemrc:
+
+gem: --no-ri --no-rdoc
+
+or the alternate configuration is:
+
+install: --no-rdoc --no-ri
+
+update: --no-rdoc --no-ri
+
+== Generate service model
+
+$ rails g scaffold service name:string description:text
+
+== Generate migration script to add service_id to sales table
+
+$ rails g migration add_service_id_to_sale service_id:integer
+
+ add_column :sales, :service_id, :integer, :null=> true
+
+-- update service_id = 1 on all records in console
+
+$ Sale.update_all(service_id: 1)
+
+== Added whenever gem for cron job to send out email
