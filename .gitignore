@@ -19,7 +19,7 @@
 /config/database.yml
 
 # Ignore all uploads/
-/public/uploads/*
+/public/uploads
 
 # Ignore all project files
 *.sublime-project
