@@ -62,7 +62,7 @@ namespace :deploy do
   desc "Symlink shared/uploads folder for file uploads"
   task :symlink_directories do
     run "rm -Rf #{release_path}/public/uploads"
-    run "ln -s #{shared_path}/uploads #{release_path}/public/uploads"
+    run "ln -s #{shared_path}/public/uploads #{release_path}/public/uploads"
   end
 
   desc "Restart applicaiton"
