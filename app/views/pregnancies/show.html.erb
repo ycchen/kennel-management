@@ -63,11 +63,11 @@
             <strong>Dog:</strong> <%= @pregnancy.matings.first.sire.call_name  if !@pregnancy.matings.first.nil? %>
             <strong>Color:</strong> <%= @pregnancy.matings.first.sire.color.name if !@pregnancy.matings.first.nil?%>
           </p>
-            <table class="table table-striped">
+            <table class="table table-striped table-condensed">
               <tr>
                 <td>Dog</td>
-                <td>Progesterone</td>
-                <td>Mating Date</td>
+                <td>Result<!-- Progesterone --></td>
+                <td>Date</td>
                 <td>Days</td>
                 <td></td>
               </tr>
@@ -103,7 +103,7 @@
           </div>
            <p><strong>Litter Information</strong></p>
            <p><%= @pregnancy.litters.where(gender: 'Male').size %> M - <%= @pregnancy.litters.where(gender: 'Female').size %> F</p>
-            <table class="table table-striped">
+            <table class="table table-striped table-condensed">
               <tr><td>Gender</td><td>Color</td><td>Survival</td><td>Dog</td><td></td></tr>
               <% @pregnancy.litters.each do |litter| %>
                 <tr>

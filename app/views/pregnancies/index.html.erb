@@ -11,11 +11,6 @@
         </div>
         
         <div>
-            <%#= high_chart("pregnancy", @chart) %>
-            <%#= high_chart("chart1", @chart1) %>
-            <%#= high_chart("chart2", @chart2) %>
-            <%#= high_chart("chart3", @chart3) %>
-            <%#= high_chart("chart4", @chart4) %>
             <div id="mychart"></div>
         </div>
 <%#= @pregnancies.already_due.order('due_date').map{|x| x.litters.where(survival: true).size} %>
@@ -34,6 +29,9 @@
             <li>
                 <a href="#pane3" data-toggle="tab">
                 <span class="badge"><%= Pregnancy.already_due.size %></span>&nbsp;Already Due</a>
+            </li>
+            <li>
+                <a href="#pane4" data-toggle="tab"><span class="badge"><%= Picture.all.size %></span>&nbsp;Photos</a>
             </li> 
           </ul>
           
@@ -91,15 +89,19 @@
                 </tbody>
               </table>
             </div>
+
+            <div id="pane4" class="tab-pane">
+              <% @pregnancies.each do |pregnancy| %>
+                <%= render :partial => 'photo', locals: {pregnancy: pregnancy} %>
+              <% end %>
             </div>
 
           </div><!-- ./tab-content -->
         </div><!-- ./tabbable -->
 
-
-
-        
       </div>
     </div>
   </div>
 </div>
+
+<%= render :partial => 'gallery' %>

@@ -1,0 +1,14 @@
+<div class="row">
+	<div class="links">
+		<div class="col-md-12"><h4><%= pregnancy.name %></h4></div>
+		<% if pregnancy.pictures.size > 0 %>	
+			<% pregnancy.pictures.each do |pic| %>
+				    <%= link_to image_tag(pic.file.url, :class => "small-image"), pic.file.url, data: {:gallery => "data-gallery"}, :title => "#{pregnancy.name} - puppy" %>
+				    <%#= link_to image.url.url(:original), "Image", :data => {:gallery => 'gallery'}, :title => "Apple" %>
+				    <%#= image_tag(image.url.url(:original), :data => {:gallery => "gallery"}, :title => "Apple") %>
+			<% end %>
+		<% else %>
+			<div class="col-md-12"><h4>No Photo</h4></div>
+		<% end %>
+	</div>
+</div>

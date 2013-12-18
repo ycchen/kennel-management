@@ -4,8 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
   <title><%= content_for?(:title) ? yield(:title) : "Kennel Mgt System" %></title>
-	<%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => false %>
-  	<%= javascript_include_tag "application", "data-turbolinks-track" => false %>
+	<%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+	<link rel="stylesheet" href="http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+	<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+	<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>	
   	<%= csrf_meta_tags %>
 </head>
 <body>

@@ -52,9 +52,9 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.string   "currency"
   end
 
-  add_index "dog_expenses", ["charge_id"], name: "index_dog_expenses_on_charge_id"
-  add_index "dog_expenses", ["dog_id"], name: "index_dog_expenses_on_dog_id"
-  add_index "dog_expenses", ["show_entry_id"], name: "index_dog_expenses_on_show_entry_id"
+  add_index "dog_expenses", ["charge_id"], name: "index_dog_expenses_on_charge_id", using: :btree
+  add_index "dog_expenses", ["dog_id"], name: "index_dog_expenses_on_dog_id", using: :btree
+  add_index "dog_expenses", ["show_entry_id"], name: "index_dog_expenses_on_show_entry_id", using: :btree
 
   create_table "dogs", force: true do |t|
     t.string   "name"
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.integer  "status_id",       default: 1
   end
 
-  add_index "dogs", ["color_id"], name: "index_dogs_on_color_id"
+  add_index "dogs", ["color_id"], name: "index_dogs_on_color_id", using: :btree
 
   create_table "litters", force: true do |t|
     t.integer  "pregnancy_id"
@@ -83,9 +83,9 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.boolean  "cleft_palate", default: false
   end
 
-  add_index "litters", ["color_id"], name: "index_litters_on_color_id"
-  add_index "litters", ["dog_id"], name: "index_litters_on_dog_id"
-  add_index "litters", ["pregnancy_id"], name: "index_litters_on_pregnancy_id"
+  add_index "litters", ["color_id"], name: "index_litters_on_color_id", using: :btree
+  add_index "litters", ["dog_id"], name: "index_litters_on_dog_id", using: :btree
+  add_index "litters", ["pregnancy_id"], name: "index_litters_on_pregnancy_id", using: :btree
 
   create_table "matings", force: true do |t|
     t.integer  "pregnancy_id"
@@ -96,7 +96,7 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.decimal  "progesterone", precision: 8, scale: 2, default: 0.0
   end
 
-  add_index "matings", ["pregnancy_id"], name: "index_matings_on_pregnancy_id"
+  add_index "matings", ["pregnancy_id"], name: "index_matings_on_pregnancy_id", using: :btree
 
   create_table "payment_statuses", force: true do |t|
     t.string   "name"
@@ -132,7 +132,7 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.datetime "updated_at"
   end
 
-  add_index "pictures", ["attachable_id", "attachable_type"], name: "index_pictures_on_attachable_id_and_attachable_type"
+  add_index "pictures", ["attachable_id", "attachable_type"], name: "index_pictures_on_attachable_id_and_attachable_type", using: :btree
 
   create_table "pregnancies", force: true do |t|
     t.integer  "dog_id"
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.text     "note"
   end
 
-  add_index "pregnancies", ["dog_id"], name: "index_pregnancies_on_dog_id"
+  add_index "pregnancies", ["dog_id"], name: "index_pregnancies_on_dog_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
@@ -156,8 +156,8 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.datetime "updated_at"
   end
 
-  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
-  add_index "roles", ["name"], name: "index_roles_on_name"
+  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
+  add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
   create_table "sales", force: true do |t|
     t.integer  "dog_id"
@@ -171,8 +171,8 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.integer  "service_id"
   end
 
-  add_index "sales", ["customer_id"], name: "index_sales_on_customer_id"
-  add_index "sales", ["dog_id"], name: "index_sales_on_dog_id"
+  add_index "sales", ["customer_id"], name: "index_sales_on_customer_id", using: :btree
+  add_index "sales", ["dog_id"], name: "index_sales_on_dog_id", using: :btree
 
   create_table "services", force: true do |t|
     t.string   "name"
@@ -196,8 +196,8 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.string   "judge"
   end
 
-  add_index "show_entries", ["dog_id"], name: "index_show_entries_on_dog_id"
-  add_index "show_entries", ["show_id"], name: "index_show_entries_on_show_id"
+  add_index "show_entries", ["dog_id"], name: "index_show_entries_on_dog_id", using: :btree
+  add_index "show_entries", ["show_id"], name: "index_show_entries_on_show_id", using: :btree
 
   create_table "shows", force: true do |t|
     t.string   "name"
@@ -232,14 +232,14 @@ ActiveRecord::Schema.define(version: 20131109031312) do
     t.string   "display_name"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "users_roles", id: false, force: true do |t|
     t.integer "user_id"
     t.integer "role_id"
   end
 
-  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
 end
