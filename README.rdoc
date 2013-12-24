@@ -830,3 +830,12 @@ $ rails g migration add_service_id_to_sale service_id:integer
 $ Sale.update_all(service_id: 1)
 
 == Added whenever gem for cron job to send out email
+
+== Import data from sql file to sqlite3 database
+
+cd to c:\sqlite3
+$ sqlite3 c:\websites\kennel-management\db\development.sqlte3
+
+inside of sqlite3 console
+
+> .read C:\\temp\\mgt.hungkwang.com\\sqlite3-showdogs.sql

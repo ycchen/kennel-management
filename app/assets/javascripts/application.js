@@ -24,9 +24,8 @@
 
 $(function(){
 	$('.alert').delay(5000).slideUp('slow');
-	// $('#dp3').datepicker();
+	$('#dp3').datepicker();
 });
-
 
 // $(document).ready(function () {
 //   $('#dp3').datepicker();
