@@ -4,7 +4,7 @@ class ShowEntriesController < ApplicationController
   # GET /show_entries
   # GET /show_entries.json
   def index
-    @show_entries = ShowEntry.all.order("show_date")
+    @show_entries = ShowEntry.all.order("show_date DESC")
     
     respond_to do |format|
       format.html

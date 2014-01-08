@@ -5,6 +5,7 @@ class Dog < ActiveRecord::Base
 	has_many :sales
 	has_many :photos
 	has_many :pregnancies
+	has_many :litters
 	belongs_to :color
 	belongs_to :status
 	
@@ -16,9 +17,9 @@ class Dog < ActiveRecord::Base
 
 	validates :name, :call_name, :color_id, presence:true
 
-	scope :bitches, lambda{where(gender: 'Female', status_id: 1)}
-	scope :dogs, lambda{where(gender: 'Male', status_id: 1)}
-	scope :sold, lambda{joins(:sales).where(sales: {service_id: 1})}
+	scope :bitches, lambda{where(gender: 'Female', status_id: 1).order(birthday: :desc)}
+	scope :dogs, lambda{where(gender: 'Male', status_id: 1).order(birthday: :desc)}
+	scope :sold, lambda{joins(:sales).where(sales: {service_id: 1}).order(birthday: :desc)}
 	def self.to_csv(options ={})
 		CSV.generate(options) do |csv|
 			csv << column_names

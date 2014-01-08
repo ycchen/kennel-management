@@ -5,7 +5,7 @@ class DogExpensesController < ApplicationController
   # GET /dog_expenses.json
   def index
     # @dog_expenses = DogExpense.all
-    @dog_expenses = DogExpense.order('charge_date DESC')
+    @dog_expenses = DogExpense.order(charge_date: :desc)
     
 
     @colors = Charge.all.map{|c| ["##{rand(0xffffff).to_s(16)}"]}

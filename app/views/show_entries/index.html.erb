@@ -33,7 +33,7 @@
             <tbody>
               <% @show_entries.each do |show_entry| %>
                 <tr>
-                  <td><%= show_entry.dog.call_name %></td>
+                  <td><%= link_to show_entry.dog.call_name, dog_path(show_entry.dog) %></td>
                   <td><%= show_entry.show.name %><br/><%= show_entry.show_date %></td>
                   <td><%= number_to_currency(show_entry.entry_fee) %></td>
                   <td><%= number_to_currency(show_entry.handling_fee) %></td>

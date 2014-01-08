@@ -14,7 +14,7 @@
   <div class="form-group">
     <div class="col-xs-4">
     <%= f.label :dog %>
-    <%= f.select(:dog_id, Dog.all.map{|b|[b.name, b.id]}, {include_blank: 'Select a Dog'}, {class: 'form-control'})%>
+    <%= f.select(:dog_id, Dog.where(status_id: 1).order(call_name: :asc).map{|b|[b.name, b.id]}, {include_blank: 'Select a Dog'}, {class: 'form-control'})%>
     </div>
   </div>
   <div class="form-group">
