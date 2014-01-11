@@ -19,13 +19,13 @@
               <tr>
                 <th>Dog</th>
                 <th>Show</th>
-                <th>Entry fee</th>
-                <th>Handling fee</th>
+                <th>Entry $</th>
+                <th>Handling $</th>
                 <th>Expense</th>
-                <th>Points</th>
-                <th>Title</th>
-                <!-- <th>Judge</th> -->
-                <th>Photos</th>
+                <th>Pts</th>
+                <th>Class/Title</th>
+                <th><span class="glyphicon glyphicon-user"></span></th>
+                <th><span class="glyphicon glyphicon-picture"></span></th>
                 <th></th>
               </tr>
             </thead>
@@ -39,8 +39,8 @@
                   <td><%= number_to_currency(show_entry.handling_fee) %></td>
                   <td><%= number_to_currency(show_entry.expense) %></td>
                   <td><%= show_entry.points %></td>
-                  <td><%= show_entry.title %></td>
-                  <!-- <td><%= show_entry.judge %></td> -->
+                  <td><%= show_entry.reg_class %><br/><%= show_entry.title %></td>
+                  <td><%= show_entry.judge %></td>
                   <td><%= show_entry.pictures.size %></td>  
                   <td>
                       <div class="btn-group">

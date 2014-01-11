@@ -69,7 +69,7 @@
     <h4>Show entered information</h4>
       <table class="table table-striped">
         <tr><th>Show Date</th><th>Club</th><th>Points</th><th>Title</th></tr>
-        <% @dog.show_entries.each do |show| %>
+        <% @dog.show_entries.order(show_date: :desc).each do |show| %>
         <tr>
             <td><%= show.show_date %></td>
             <td><%= show.show.kennel_club %></td>
