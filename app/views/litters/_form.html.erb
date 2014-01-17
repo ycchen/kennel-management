@@ -46,7 +46,7 @@
   <div class="form-group">
     <div class="col-xs-8">
     <%= f.label :dog_id %>
-    <%= f.select(:dog_id, Dog.where(Dog.arel_table[:name].matches('puppy%')).where.not(id: Litter.where.not(dog_id: nil).select(:dog_id)).map{|d| [d.call_name, d.id]}, {include_blank: 'Select a dog'}, {class: 'form-control'}) %>
+    <%= f.select(:dog_id, Dog.not_assigned_puppies.map{|d| [d.call_name, d.id]} , {include_blank: 'Select a dog'}, {class: 'form-control'}) %>
     </div>
   </div>
   <p>

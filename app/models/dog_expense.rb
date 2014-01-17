@@ -7,11 +7,15 @@ class DogExpense < ActiveRecord::Base
   validates :dog_id, :charge_id, presence:true
   validates :amount, presence: true, numericality: true
   
-  # scope :tw_dollars, -> {where(currency: 'TW')}
-  scope :tw_dollars, lambda{where(currency: 'TW')}
+  scope :tw_dollars, -> {where(currency: 'TW')} # scope without passing arguments
+  # scope :tw_dollars, lambda{|dog_id = nil| where(currency: 'TW', dog_id: dog_id)} # scope accepting arguments
   scope :us_dollars, lambda{where(currency: 'USD')}
+  # scope :us_dollars, lambda{|dog_id = nil| where(currency: 'USD', dog_id: dog_id)} # scope accepting arguments
 
-	def self.to_csv(options ={})
+  #scope :total_charge_by_dog, lambda{ |currency, dog_id| where(currency: currency, dog_id: dog_id) }
+  scope :total_charge_by_dog, -> (currency, dog_id){ where(currency: currency, dog_id: dog_id) }
+  
+  def self.to_csv(options ={})
 		CSV.generate(options) do |csv|
 			csv << column_names
 			all.each do |dog_expense|

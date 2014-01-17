@@ -882,3 +882,58 @@ gender: "Female", status_id: 1>]>
 ## How to express a NOT IN query with ActiveRecord/Rails?
 
 http://stackoverflow.com/questions/4307411/how-to-express-a-not-in-query-with-activerecord-rails
+
+## refactoring not_assigned_puppies into scope variables in Dog model
+
+scope :not_assigned_puppies, lambda{where(Dog.arel_table[:name].matches('puppy%')).where.not(id: Litter.where.not(dog_id: nil).select(:dog_id))}
+
+instead of Dog.where(Dog.arel_table[:name].matches('puppy%')).where.not(id: Litter.where.not(dog_id: nil).select(:dog_id)).map{|d| [d.call_name, d.id]}
+
+## What is the difference between a Block, a Proc, and a Lambda in ruby? It is just ways of grouping code we want to run
+
+## Difference between Blocks and Procs: Procs are objects, blocks are not
+
+# Procs are "anonymous methods" (or nameless functions) containing code. They can be placed inside of variable and passed around like any other object or scalar value. They are created by Proc.new, lambda, and blocks
+
+
+
+## Differences between Procs and Lambdas: Both Procs and Lambdas are Proc objects
+
+# block example
+
+[1,2,3].each {|x| puts x*2} # block is in between the curly braces
+
+[1,2,3].each do |x|
+	puts x*2
+end  # block is everything between the do and end
+
+# Proc example
+
+p = Proc.new{|x| puts x*2 }
+[1,2,3].each(&p)            # The '&' tells ruby to turn the proc into a block
+
+proc = Proc.new{puts "hello world"}
+proc.call 					# The body of the Proc object gets executed when called
+
+# Lambda examples
+
+lam = lambda{|x| puts x*2}
+[1,2,3].each(&lam)
+
+lam = lambda{ puts "hello world"}
+lam.call
+
+# Person.find(1) 		# returns the object for ID=1
+
+# Preson.find(1,2,3) 	# returns an array for object with IDs in (1,2,3)
+
+# Prson.find([1,2])		# returns an array for object with IDs in (1,2)
+
+## passing arguments into scope
+
+http://guides.rubyonrails.org/active_record_querying.html#scopes
+
+scope :published, -> { where(published: true) }
+scope :created_before, ->(time) { where("created_at < ?", time) } OR
+scope :created_before, lambda{|time| where("created_at < ?", time)}
+scope :total_charge_by_dog, lambda{ |currency, dog_id| where(currency: currency, dog_id: dog_id) }

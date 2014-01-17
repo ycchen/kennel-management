@@ -17,45 +17,20 @@
     <% end %>
     <li><a href="<%= dogs_path() %>">Dog List</a></li>
   </ul>
+  
   <div class="tab-content">
     <div id="pane1" class="tab-pane active">
       <h4>Dog basic information</h4>
-      <p>
-        <strong>Name:</strong>
-        <%= @dog.name %>
-      </p>
-      <p>
-        <strong>Call name:</strong>
-        <%= @dog.call_name %>
-      </p>
-      <p>
-        <strong>Color:</strong>
-        <%= @dog.color.name %>
-      </p>
-      <p>
-        <strong>Sire:</strong>
-        <%= @dog.sire.name if @dog.sire %>
-      </p>
-      <p>
-        <strong>Dams:</strong>
-        <%= @dog.dams.name if @dog.dams %>
-      </p>            
-      <p>
-        <strong>Birthday:</strong>
-        <%= @dog.birthday %>
-      </p>
-      <p>
-        <strong>Gender:</strong>
-        <%= @dog.gender %>
-      </p>
-      <p>
-        <strong>Registration no:</strong>
-        <%= @dog.registration_no %>
-      </p>
-      <p>
-        <strong>Status:</strong>
-        <%= @dog.status.name %>
-      </p>
+
+      <p><strong>Name:</strong><%= @dog.name %></p>
+      <p><strong>Call name:</strong><%= @dog.call_name %></p>
+      <p><strong>Color:</strong><%= @dog.color.name %></p>
+      <p><strong>Sire:</strong><%= @dog.sire.name if @dog.sire %></p>
+      <p><strong>Dams:</strong><%= @dog.dams.name if @dog.dams %></p>            
+      <p><strong>Birthday:</strong><%= @dog.birthday %></p>
+      <p><strong>Gender:</strong><%= @dog.gender %></p>
+      <p><strong>Registration no:</strong><%= @dog.registration_no %></p>
+      <p><strong>Status:</strong><%= @dog.status.name %></p>
       <p>
         <% @dog.pictures.each do |p| %>
           <%= image_tag(p.file.url, heigh: 200, width:200) if p.file? %>
@@ -89,21 +64,25 @@
     <div id="pane3" class="tab-pane">
       <h4>Expense for <%= @dog.call_name %></h4>
        <table class="table table-striped">
-        <tr><th>Charge Date</th><th>Charge</th><th>Amount</th><th>note</th></tr>
-        <% @dog.dog_expenses.each do |expense| %>
+        <tr><th>Charge Date</th><th>Charge</th><th>Note</th><th>Amount</th></tr>
+        <% @dog.dog_expenses.order(charge_date: :desc).each do |expense| %>
         <tr>
             <td><%= expense.charge_date %></td>
             <td><%= expense.charge.name %></td>
-            <td><%#= number_to_currency(expense.amount) %>
-              <%= currency_to(expense.amount, expense.currency)%></td>
-            <td><%= expense.note %></td>
+            <td><pre><%= expense.note %></pre></td>
+            <td class="td-text-right"><%#= number_to_currency(expense.amount) %>
+              <%= currency_to(expense.amount, expense.currency) if expense.currency == 'USD' %>
+              <%= currency_to(expense.amount, expense.currency) if expense.currency == 'TW' %>
+            </td>
+            
         </tr>
         <% end %>
         <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td><%= number_to_currency(@dog.dog_expenses.map(&:amount).sum) %></td>
             <td>&nbsp;</td>
+            <td class="td-text-right">
+              <%= currency_to(@dog.dog_expenses.map(&:amount).sum, @dog.dog_expenses.map(&:currency).uniq.first) %></td>
         </tr>
       </table>
     </div>
