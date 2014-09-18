@@ -937,3 +937,5 @@ scope :published, -> { where(published: true) }
 scope :created_before, ->(time) { where("created_at < ?", time) } OR
 scope :created_before, lambda{|time| where("created_at < ?", time)}
 scope :total_charge_by_dog, lambda{ |currency, dog_id| where(currency: currency, dog_id: dog_id) }
+
+hello
